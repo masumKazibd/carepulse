@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePulse Health Clinic - Online Appointment Booking System</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        medical: {
+                            blue: '#0284c7',
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth Scrolling & Custom Focus Ring Effects */
+        html {
+            scroll-behavior: smooth;
+        }
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+        }
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white text-xl shadow-md shadow-teal-500/20">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold text-slate-900 tracking-tight">Care<span class="text-teal-600">Pulse</span></span>
+                        <span class="block text-xs font-medium text-slate-500">Medical & Diagnostic Center</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links (4+ Links) -->
+                <nav class="hidden md:flex space-x-8 items-center font-medium text-slate-600">
+                    <button onclick="switchTab('home')" id="nav-link-home" class="nav-btn text-teal-600 font-semibold hover:text-teal-600 transition">
+                        <i class="fa-solid fa-house mr-1 text-sm"></i> Home
+                    </button>
+                    <a href="#services-section" onclick="navigateToSection('services-section')" class="hover:text-teal-600 transition">
+                        <i class="fa-solid fa-stethoscope mr-1 text-sm"></i> Services
+                    </a>
+                    <a href="#doctors-section" onclick="navigateToSection('doctors-section')" class="hover:text-teal-600 transition">
+                        <i class="fa-solid fa-user-doctor mr-1 text-sm"></i> Our Doctors
+                    </a>
+                    <button onclick="switchTab('booking')" id="nav-link-booking" class="nav-btn bg-teal-600 text-white px-5 py-2.5 rounded-xl hover:bg-teal-700 transition shadow-md shadow-teal-600/20 active:scale-95">
+                        <i class="fa-solid fa-calendar-check mr-1.5"></i> Book Appointment
+                    </button>
+                </nav>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" type="button" class="text-slate-600 hover:text-teal-600 p-2 rounded-lg focus:outline-none" aria-label="Toggle menu">
+                        <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-lg">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-teal-50 hover:text-teal-600">
+                <i class="fa-solid fa-house w-6 text-teal-600"></i> Home
+            </button>
+            <button onclick="navigateToSection('services-section'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-teal-50 hover:text-teal-600">
+                <i class="fa-solid fa-stethoscope w-6 text-teal-600"></i> Services
+            </button>
+            <button onclick="navigateToSection('doctors-section'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-teal-50 hover:text-teal-600">
+                <i class="fa-solid fa-user-doctor w-6 text-teal-600"></i> Our Doctors
+            </button>
+            <button onclick="switchTab('booking'); toggleMobileMenu();" class="block w-full text-center mt-2 bg-teal-600 text-white font-semibold py-2.5 rounded-xl hover:bg-teal-700 shadow-md">
+                <i class="fa-solid fa-calendar-check mr-1.5"></i> Book Appointment
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- PAGE 1: LANDING / HOME VIEW -->
+        <div id="page-home" class="page-view">
+
+            <!-- 1. Hero Section -->
+            <section class="relative bg-gradient-to-b from-teal-50/60 via-slate-50 to-white py-16 md:py-24 overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid lg:grid-cols-12 gap-12 items-center">
+                        
+                        <!-- Hero Text Content -->
+                        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                            <span class="inline-flex items-center gap-2 bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+                                <i class="fa-solid fa-shield-heart"></i> Trusted Healthcare Excellence
+                            </span>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                                Compassionate Care, <br class="hidden sm:inline">
+                                <span class="text-teal-600">Advanced Medicine.</span>
+                            </h1>
+                            <p class="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                                Experience seamless clinic bookings with top-tier healthcare professionals. Get instant confirmation, personalized consultations, and modern diagnostic services under one roof.
+                            </p>
+
+                            <!-- CTAs (Primary & Secondary visually distinct) -->
+                            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                                <button onclick="switchTab('booking')" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg shadow-teal-600/30 transition transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-calendar-plus text-lg"></i> Book Appointment Now
+                                </button>
+                                <a href="#services-section" onclick="navigateToSection('services-section')" class="w-full sm:w-auto bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold px-8 py-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-circle-info text-teal-600"></i> Explore Our Services
+                                </a>
+                            </div>
+
+                            <!-- Highlights/Stats -->
+                            <div class="pt-8 border-t border-slate-200/80 grid grid-cols-3 gap-4 text-center lg:text-left">
+                                <div>
+                                    <p class="text-2xl font-bold text-slate-900">25+</p>
+                                    <p class="text-xs text-slate-500 font-medium">Expert Specialist Doctors</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-slate-900">15k+</p>
+                                    <p class="text-xs text-slate-500 font-medium">Satisfied Patients</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-slate-900">24/7</p>
+                                    <p class="text-xs text-slate-500 font-medium">Emergency Care</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hero Feature Visual / Image Card -->
+                        <div class="lg:col-span-5 relative">
+                            <div class="relative mx-auto max-w-md lg:max-w-none">
+                                <div class="bg-gradient-to-tr from-teal-500 to-sky-500 rounded-3xl p-1 shadow-2xl">
+                                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80" 
+                                         alt="Doctor attending patient" 
+                                         onerror="this.src='https://placehold.co/600x400/0d9488/ffffff?text=CarePulse+Clinic'"
+                                         class="rounded-[22px] object-cover h-[380px] w-full shadow-inner">
+                                </div>
+
+                                <!-- Floating Badge -->
+                                <div class="absolute -bottom-6 -left-6 glass-card border border-white/60 shadow-xl rounded-2xl p-4 flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-slate-500 font-medium">Instant Booking</p>
+                                        <p class="text-sm font-bold text-slate-800">Verified Doctors Available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Services / Content Cards Section (4 Cards) -->
+            <section id="services-section" class="py-20 bg-slate-50 border-t border-slate-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <h2 class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-2">Our Key Specializations</h2>
+                        <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Comprehensive Healthcare Services</h3>
+                        <p class="text-slate-600 mt-3 text-base">We provide specialized clinical departments equipped with cutting-edge medical technology and expert medical staff.</p>
+                    </div>
+
+                    <!-- Grid of 4 Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        
+                        <!-- Card 1: General Cardiology -->
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-teal-200 transition flex flex-col justify-between group">
+                            <div>
+                                <div class="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-heart-pulse"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-slate-800 mb-2">General Cardiology</h4>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">Complete cardiovascular screenings, ECGs, hypertension control, and preventative cardiac health care.</p>
+                            </div>
+                            <button onclick="preselectDepartment('Cardiology')" class="w-full bg-slate-100 hover:bg-teal-600 text-slate-700 hover:text-white font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                                Book Service <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card 2: Pediatrics & Child Care -->
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-teal-200 transition flex flex-col justify-between group">
+                            <div>
+                                <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-baby"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-slate-800 mb-2">Pediatric Care</h4>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">Gentle, specialized healthcare for infants, children, and teens, including vaccinations and growth checks.</p>
+                            </div>
+                            <button onclick="preselectDepartment('Pediatrics')" class="w-full bg-slate-100 hover:bg-teal-600 text-slate-700 hover:text-white font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                                Book Service <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card 3: Dental Care -->
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-teal-200 transition flex flex-col justify-between group">
+                            <div>
+                                <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-tooth"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-slate-800 mb-2">Dental & Oral Care</h4>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">Routine dental checkups, cleaning, cosmetic dentistry, orthodontics, and restorative oral surgery.</p>
+                            </div>
+                            <button onclick="preselectDepartment('Dental Care')" class="w-full bg-slate-100 hover:bg-teal-600 text-slate-700 hover:text-white font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                                Book Service <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card 4: Dermatology -->
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-teal-200 transition flex flex-col justify-between group">
+                            <div>
+                                <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-allergies"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-slate-800 mb-2">Dermatology</h4>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">Advanced skin, hair, and nail consultations, acne treatment, allergy testing, and cosmetic care.</p>
+                            </div>
+                            <button onclick="preselectDepartment('Dermatology')" class="w-full bg-slate-100 hover:bg-teal-600 text-slate-700 hover:text-white font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                                Book Service <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Featured Doctors Section -->
+            <section id="doctors-section" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <h2 class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-2">Medical Team</h2>
+                        <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Meet Our Specialist Doctors</h3>
+                        <p class="text-slate-600 mt-3 text-base">Board-certified specialists dedicated to delivering expert diagnosis and warm, personalized care.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Doctor 1 -->
+                        <div class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Dr. Sarah Jenkins" 
+                                 onerror="this.src='https://placehold.co/400x300/0f766e/ffffff?text=Dr.+Sarah+Jenkins'"
+                                 class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-md">Senior Cardiologist</span>
+                                <h4 class="text-xl font-bold text-slate-900 mt-2">Dr. Sarah Jenkins, MD</h4>
+                                <p class="text-slate-500 text-sm mt-1 mb-4"><i class="fa-solid fa-award text-amber-500 mr-1"></i> 14+ Years Experience</p>
+                                <button onclick="preselectDepartment('Cardiology')" class="w-full bg-white border border-slate-200 hover:border-teal-600 text-teal-700 font-semibold py-2 rounded-xl transition text-sm">
+                                    Book Consultation
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Doctor 2 -->
+                        <div class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Dr. Marcus Vance" 
+                                 onerror="this.src='https://placehold.co/400x300/0f766e/ffffff?text=Dr.+Marcus+Vance'"
+                                 class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Chief Pediatrician</span>
+                                <h4 class="text-xl font-bold text-slate-900 mt-2">Dr. Marcus Vance, MBBS</h4>
+                                <p class="text-slate-500 text-sm mt-1 mb-4"><i class="fa-solid fa-award text-amber-500 mr-1"></i> 10+ Years Experience</p>
+                                <button onclick="preselectDepartment('Pediatrics')" class="w-full bg-white border border-slate-200 hover:border-teal-600 text-teal-700 font-semibold py-2 rounded-xl transition text-sm">
+                                    Book Consultation
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Doctor 3 -->
+                        <div class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Dr. Elena Rostova" 
+                                 onerror="this.src='https://placehold.co/400x300/0f766e/ffffff?text=Dr.+Elena+Rostova'"
+                                 class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <span class="text-xs font-bold text-sky-600 bg-sky-50 px-2.5 py-1 rounded-md">Dermatology Specialist</span>
+                                <h4 class="text-xl font-bold text-slate-900 mt-2">Dr. Elena Rostova, MD</h4>
+                                <p class="text-slate-500 text-sm mt-1 mb-4"><i class="fa-solid fa-award text-amber-500 mr-1"></i> 8+ Years Experience</p>
+                                <button onclick="preselectDepartment('Dermatology')" class="w-full bg-white border border-slate-200 hover:border-teal-600 text-teal-700 font-semibold py-2 rounded-xl transition text-sm">
+                                    Book Consultation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- PAGE 2: FORM PAGE (CLINIC APPOINTMENT BOOKING FORM) -->
+        <div id="page-booking" class="page-view hidden py-12 bg-slate-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Page Title Header -->
+                <div class="mb-8 text-center sm:text-left">
+                    <button onclick="switchTab('home')" class="text-slate-500 hover:text-teal-600 text-sm font-semibold mb-3 inline-flex items-center gap-1 transition">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Home
+                    </button>
+                    <h1 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Book an Appointment</h1>
+                    <p class="text-slate-600 mt-2 text-sm sm:text-base">Please fill in patient details and schedule your appointment slot. All fields marked with <span class="text-rose-500">*</span> are required.</p>
+                </div>
+
+                <!-- Form Card -->
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80">
+                    <form id="appointment-form" novalidate onsubmit="handleFormSubmit(event)">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <!-- Field 1: Full Name (Input Type: text) -->
+                            <div class="space-y-1.5">
+                                <label for="fullName" class="block text-sm font-semibold text-slate-700">
+                                    Full Name <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                        <i class="fa-regular fa-user"></i>
+                                    </div>
+                                    <input type="text" id="fullName" name="fullName" placeholder="John Doe"
+                                           class="form-input w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-sm focus:border-teal-600 transition"
+                                           onblur="validateField('fullName')">
+                                </div>
+                                <p id="error-fullName" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                            </div>
+
+                            <!-- Field 2: Email Address (Input Type: email) -->
+                            <div class="space-y-1.5">
+                                <label for="email" class="block text-sm font-semibold text-slate-700">
+                                    Email Address <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                        <i class="fa-regular fa-envelope"></i>
+                                    </div>
+                                    <input type="email" id="email" name="email" placeholder="john.doe@example.com"
+                                           class="form-input w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-sm focus:border-teal-600 transition"
+                                           onblur="validateField('email')">
+                                </div>
+                                <p id="error-email" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                            </div>
+
+                            <!-- Field 3: Phone Number (Input Type: tel with Pattern Regex Validation) -->
+                            <div class="space-y-1.5">
+                                <label for="phone" class="block text-sm font-semibold text-slate-700">
+                                    Phone Number <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </div>
+                                    <input type="tel" id="phone" name="phone" placeholder="e.g. +1 234 567 8900"
+                                           class="form-input w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-sm focus:border-teal-600 transition"
+                                           onblur="validateField('phone')">
+                                </div>
+                                <p class="text-[11px] text-slate-400">Format: At least 10 digits (digits, spaces, or + allowed)</p>
+                                <p id="error-phone" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                            </div>
+
+                            <!-- Field 4: Preferred Appointment Date (Input Type: date with Cross-field Future Rule) -->
+                            <div class="space-y-1.5">
+                                <label for="appointmentDate" class="block text-sm font-semibold text-slate-700">
+                                    Preferred Date <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="date" id="appointmentDate" name="appointmentDate"
+                                           class="form-input w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-sm focus:border-teal-600 transition"
+                                           onchange="validateField('appointmentDate')">
+                                </div>
+                                <p id="error-appointmentDate" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                            </div>
+
+                            <!-- Field 5: Department / Specialty (Input Type: select dropdown) -->
+                            <div class="space-y-1.5">
+                                <label for="department" class="block text-sm font-semibold text-slate-700">
+                                    Medical Specialty / Department <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select id="department" name="department"
+                                            class="form-input w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-sm focus:border-teal-600 transition bg-white"
+                                            onchange="validateField('department')">
+                                        <option value="">-- Select Department --</option>
+                                        <option value="General Cardiology">General Cardiology</option>
+                                        <option value="Pediatrics">Pediatrics & Child Care</option>
+                                        <option value="Dental Care">Dental Care & Oral Surgery</option>
+                                        <option value="Dermatology">Dermatology & Skin Care</option>
+                                        <option value="General Medicine">General Medicine & Routine Health Check</option>
+                                    </select>
+                                </div>
+                                <p id="error-department" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                            </div>
+
+                            <!-- Field 6: Payment / Insurance Status (Input Type: Radio Buttons) -->
+                            <div class="space-y-1.5">
+                                <label class="block text-sm font-semibold text-slate-700">
+                                    Patient Type & Billing <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="grid grid-cols-2 gap-3 pt-1">
+                                    <label class="flex items-center space-x-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                                        <input type="radio" name="patientType" value="Self-Pay" checked onchange="handlePatientTypeChange(); validateField('patientType');" class="text-teal-600 focus:ring-teal-500">
+                                        <span class="text-xs font-semibold text-slate-700">Self Pay / Cash</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                                        <input type="radio" name="patientType" value="Insurance" onchange="handlePatientTypeChange(); validateField('patientType');" class="text-teal-600 focus:ring-teal-500">
+                                        <span class="text-xs font-semibold text-slate-700">Health Insurance</span>
+                                    </label>
+                                </div>
+                                <p id="error-patientType" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                            </div>
+
+                        </div>
+
+                        <!-- Field 7: Appointment Time Slot (Input Type: Custom Radio Select Grid) -->
+                        <div class="mt-6 space-y-1.5">
+                            <label class="block text-sm font-semibold text-slate-700">
+                                Preferred Time Slot <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1" id="time-slot-container">
+                                <label class="time-slot-label cursor-pointer text-center p-3 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:border-teal-600 transition">
+                                    <input type="radio" name="timeSlot" value="09:00 AM - 10:00 AM" class="hidden" onchange="updateTimeSlotStyles(); validateField('timeSlot');">
+                                    <span>09:00 AM - 10:00 AM</span>
+                                </label>
+                                <label class="time-slot-label cursor-pointer text-center p-3 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:border-teal-600 transition">
+                                    <input type="radio" name="timeSlot" value="11:00 AM - 12:00 PM" class="hidden" onchange="updateTimeSlotStyles(); validateField('timeSlot');">
+                                    <span>11:00 AM - 12:00 PM</span>
+                                </label>
+                                <label class="time-slot-label cursor-pointer text-center p-3 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:border-teal-600 transition">
+                                    <input type="radio" name="timeSlot" value="02:00 PM - 03:00 PM" class="hidden" onchange="updateTimeSlotStyles(); validateField('timeSlot');">
+                                    <span>02:00 PM - 03:00 PM</span>
+                                </label>
+                                <label class="time-slot-label cursor-pointer text-center p-3 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:border-teal-600 transition">
+                                    <input type="radio" name="timeSlot" value="04:00 PM - 05:00 PM" class="hidden" onchange="updateTimeSlotStyles(); validateField('timeSlot');">
+                                    <span>04:00 PM - 05:00 PM</span>
+                                </label>
+                            </div>
+                            <p id="error-timeSlot" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                        </div>
+
+                        <!-- Field 8: Cross-Field Dynamic Rule - Insurance ID File Upload (Input Type: file) -->
+                        <div id="insurance-upload-wrapper" class="mt-6 space-y-1.5 hidden bg-teal-50/50 p-4 rounded-2xl border border-teal-100">
+                            <label for="insuranceDoc" class="block text-sm font-semibold text-slate-700">
+                                Upload Insurance Card / Medical ID <span class="text-rose-500">* (Required for Insurance Patient)</span>
+                            </label>
+                            <input type="file" id="insuranceDoc" name="insuranceDoc" accept=".pdf,.png,.jpg,.jpeg"
+                                   class="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-700 cursor-pointer"
+                                   onchange="validateField('insuranceDoc')">
+                            <p id="error-insuranceDoc" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                        </div>
+
+                        <!-- Field 9: Preferred Communication (Input Type: Checkboxes) -->
+                        <div class="mt-6 space-y-1.5">
+                            <label class="block text-sm font-semibold text-slate-700">
+                                Reminder Notifications (Select at least 1) <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="flex flex-wrap gap-4 pt-1">
+                                <label class="flex items-center space-x-2 cursor-pointer text-xs font-medium text-slate-700">
+                                    <input type="checkbox" name="notificationMethod" value="SMS Text" class="rounded text-teal-600 focus:ring-teal-500" onchange="validateField('notificationMethod')">
+                                    <span>SMS Reminder</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer text-xs font-medium text-slate-700">
+                                    <input type="checkbox" name="notificationMethod" value="Email" class="rounded text-teal-600 focus:ring-teal-500" onchange="validateField('notificationMethod')">
+                                    <span>Email Confirmation</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer text-xs font-medium text-slate-700">
+                                    <input type="checkbox" name="notificationMethod" value="WhatsApp" class="rounded text-teal-600 focus:ring-teal-500" onchange="validateField('notificationMethod')">
+                                    <span>WhatsApp Notification</span>
+                                </label>
+                            </div>
+                            <p id="error-notificationMethod" class="text-xs text-rose-500 hidden font-medium mt-1"></p>
+                        </div>
+
+                        <!-- Field 10: Symptoms / Medical Notes (Input Type: textarea) -->
+                        <div class="mt-6 space-y-1.5">
+                            <label for="notes" class="block text-sm font-semibold text-slate-700">
+                                Reason for Visit / Medical Symptoms
+                            </label>
+                            <textarea id="notes" name="notes" rows="3" placeholder="Briefly describe your health condition or reason for appointment..."
+                                      class="form-input w-full p-3.5 rounded-xl border border-slate-300 text-slate-800 text-sm focus:border-teal-600 transition"></textarea>
+                        </div>
+
+                        <!-- Form Action Buttons (Submit & Reset) -->
+                        <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-end gap-3">
+                            <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-6 py-3 border border-slate-300 rounded-xl text-slate-600 font-semibold text-sm hover:bg-slate-100 transition active:scale-95">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Form
+                            </button>
+                            <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm rounded-xl shadow-lg shadow-teal-600/30 transition active:scale-95">
+                                <i class="fa-solid fa-check-circle mr-1.5"></i> Confirm & Book Appointment
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SUCCESS CONFIRMATION MODAL / SUMMARY CARD -->
+    <div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 transform transition-all scale-95 opacity-0 animate-fade-in" id="modal-content">
+            
+            <div class="text-center">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">Appointment Confirmed!</h3>
+                <p class="text-xs text-slate-500 mt-1">Ref Code: <span id="summary-ref" class="font-mono font-bold text-teal-700"></span></p>
+            </div>
+
+            <!-- Detailed Data Summary Card -->
+            <div class="mt-6 bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3 text-xs sm:text-sm">
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Patient Name:</span>
+                    <span id="summary-name" class="font-semibold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Email Address:</span>
+                    <span id="summary-email" class="font-semibold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Phone Number:</span>
+                    <span id="summary-phone" class="font-semibold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Department:</span>
+                    <span id="summary-dept" class="font-semibold text-teal-700"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Date & Slot:</span>
+                    <span id="summary-datetime" class="font-semibold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Billing Type:</span>
+                    <span id="summary-billing" class="font-semibold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">Notifications:</span>
+                    <span id="summary-notifs" class="font-semibold text-slate-800"></span>
+                </div>
+                <div id="summary-notes-row" class="hidden pt-1">
+                    <span class="text-slate-500 block">Symptoms / Notes:</span>
+                    <p id="summary-notes" class="text-slate-700 italic text-xs mt-1 bg-white p-2.5 rounded-lg border border-slate-200"></p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button onclick="closeModalAndReset()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl transition shadow-md">
+                    Done & Return Home
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                
+                <!-- Col 1: Brand Info -->
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-white text-lg">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white tracking-tight">Care<span class="text-teal-400">Pulse</span></span>
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Providing compassionate, patient-centered medical care with seamless online appointment booking.
+                    </p>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div>
+                    <h5 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Links</h5>
+                    <ul class="space-y-2 text-xs font-medium">
+                        <li><button onclick="switchTab('home')" class="hover:text-teal-400 transition">Home</button></li>
+                        <li><a href="#services-section" onclick="navigateToSection('services-section')" class="hover:text-teal-400 transition">Clinical Services</a></li>
+                        <li><a href="#doctors-section" onclick="navigateToSection('doctors-section')" class="hover:text-teal-400 transition">Our Specialists</a></li>
+                        <li><button onclick="switchTab('booking')" class="hover:text-teal-400 transition">Book Appointment</button></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Contact Info & Opening Hours -->
+                <div>
+                    <h5 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Contact & Hours</h5>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-location-dot text-teal-400 mt-0.5"></i>
+                            <span>123 Health Science Boulevard, Suite 400</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-phone text-teal-400"></i>
+                            <span>+1 (800) 555-CARE</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope text-teal-400"></i>
+                            <span>appointments@carepulse.org</span>
+                        </li>
+                        <li class="pt-2 text-slate-300 font-medium">
+                            <i class="fa-regular fa-clock text-teal-400 mr-1"></i> Mon - Sat: 8:00 AM - 8:00 PM
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Social Links -->
+                <div>
+                    <h5 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Connect With Us</h5>
+                    <div class="flex space-x-3 text-lg">
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+                &copy; 2026 CarePulse Health Clinic System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        /* ==========================================================================
+           1. NAVIGATION & TAB SWITCHING LOGIC
+           ========================================================================== */
+        
+        /**
+         * Switches between Page 1 (Home) and Page 2 (Booking Form)
+         * @param {string} tabName - 'home' or 'booking'
+         */
+        function switchTab(tabName) {
+            const pageHome = document.getElementById('page-home');
+            const pageBooking = document.getElementById('page-booking');
+            const navLinkHome = document.getElementById('nav-link-home');
+
+            if (tabName === 'home') {
+                pageHome.classList.remove('hidden');
+                pageBooking.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tabName === 'booking') {
+                pageHome.classList.add('hidden');
+                pageBooking.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /**
+         * Navigates to a specific section on the home page smoothly
+         */
+        function navigateToSection(sectionId) {
+            switchTab('home');
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 50);
+        }
+
+        /**
+         * Preselects department from home page service cards and switches to booking form
+         */
+        function preselectDepartment(deptName) {
+            switchTab('booking');
+            const deptDropdown = document.getElementById('department');
+            if (deptDropdown) {
+                deptDropdown.value = deptName;
+                validateField('department');
+            }
+        }
+
+        /**
+         * Toggles mobile hamburger drawer
+         */
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+        /* ==========================================================================
+           2. FORM DYNAMIC HANDLERS (Cross-field Rules & Style Updates)
+           ========================================================================== */
+
+        /**
+         * Dynamic Cross-field Rule: Shows Insurance Document Upload field ONLY if Insurance is selected
+         */
+        function handlePatientTypeChange() {
+            const selectedType = document.querySelector('input[name="patientType"]:checked')?.value;
+            const insuranceWrapper = document.getElementById('insurance-upload-wrapper');
+
+            if (selectedType === 'Insurance') {
+                insuranceWrapper.classList.remove('hidden');
+            } else {
+                insuranceWrapper.classList.add('hidden');
+                clearFieldError('insuranceDoc');
+            }
+        }
+
+        /**
+         * Visual styling update for Radio Button Time Slot selection
+         */
+        function updateTimeSlotStyles() {
+            const labels = document.querySelectorAll('.time-slot-label');
+            labels.forEach(label => {
+                const radio = label.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    label.classList.add('bg-teal-600', 'text-white', 'border-teal-600');
+                    label.classList.remove('text-slate-700', 'border-slate-200');
+                } else {
+                    label.classList.remove('bg-teal-600', 'text-white', 'border-teal-600');
+                    label.classList.add('text-slate-700', 'border-slate-200');
+                }
+            });
+        }
+
+        /* Set minimum date attribute for the date input to today */
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').setAttribute('min', today);
+        };
+
+        /* ==========================================================================
+           3. CLIENT-SIDE VALIDATION LOGIC
+           ========================================================================== */
+
+        /**
+         * Displays inline error message under field
+         */
+        function showFieldError(fieldId, message) {
+            const errorEl = document.getElementById(`error-${fieldId}`);
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Clears inline error message
+         */
+        function clearFieldError(fieldId) {
+            const errorEl = document.getElementById(`error-${fieldId}`);
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Validates individual form fields
+         * @param {string} fieldName 
+         * @returns {boolean} isValid
+         */
+        function validateField(fieldName) {
+            let isValid = true;
+
+            switch (fieldName) {
+                case 'fullName': {
+                    const value = document.getElementById('fullName').value.trim();
+                    if (!value) {
+                        showFieldError('fullName', 'Full name is required.');
+                        isValid = false;
+                    } else if (value.length < 3) {
+                        showFieldError('fullName', 'Name must be at least 3 characters long.');
+                        isValid = false;
+                    } else {
+                        clearFieldError('fullName');
+                    }
+                    break;
+                }
+
+                case 'email': {
+                    const value = document.getElementById('email').value.trim();
+                    // Regex email validation rule
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!value) {
+                        showFieldError('email', 'Email address is required.');
+                        isValid = false;
+                    } else if (!emailRegex.test(value)) {
+                        showFieldError('email', 'Please enter a valid email address (e.g. name@domain.com).');
+                        isValid = false;
+                    } else {
+                        clearFieldError('email');
+                    }
+                    break;
+                }
+
+                case 'phone': {
+                    const value = document.getElementById('phone').value.trim();
+                    // Regex phone format rule (at least 10 numbers)
+                    const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+                    if (!value) {
+                        showFieldError('phone', 'Phone number is required.');
+                        isValid = false;
+                    } else if (!phoneRegex.test(value.replace(/\s+/g, ''))) {
+                        showFieldError('phone', 'Please enter a valid phone number (at least 10 digits).');
+                        isValid = false;
+                    } else {
+                        clearFieldError('phone');
+                    }
+                    break;
+                }
+
+                case 'appointmentDate': {
+                    const value = document.getElementById('appointmentDate').value;
+                    if (!value) {
+                        showFieldError('appointmentDate', 'Please select an appointment date.');
+                        isValid = false;
+                    } else {
+                        // Cross-field validation check: Date must be today or future
+                        const selectedDate = new Date(value);
+                        const today = new Date();
+                        today.setHours(0,0,0,0);
+                        if (selectedDate < today) {
+                            showFieldError('appointmentDate', 'Appointment date cannot be in the past.');
+                            isValid = false;
+                        } else {
+                            clearFieldError('appointmentDate');
+                        }
+                    }
+                    break;
+                }
+
+                case 'department': {
+                    const value = document.getElementById('department').value;
+                    if (!value) {
+                        showFieldError('department', 'Please select a medical department.');
+                        isValid = false;
+                    } else {
+                        clearFieldError('department');
+                    }
+                    break;
+                }
+
+                case 'timeSlot': {
+                    const selected = document.querySelector('input[name="timeSlot"]:checked');
+                    if (!selected) {
+                        showFieldError('timeSlot', 'Please pick a preferred time slot.');
+                        isValid = false;
+                    } else {
+                        clearFieldError('timeSlot');
+                    }
+                    break;
+                }
+
+                case 'insuranceDoc': {
+                    const patientType = document.querySelector('input[name="patientType"]:checked')?.value;
+                    if (patientType === 'Insurance') {
+                        const fileInput = document.getElementById('insuranceDoc');
+                        if (!fileInput.files || fileInput.files.length === 0) {
+                            showFieldError('insuranceDoc', 'Insurance document upload is required for insurance billing.');
+                            isValid = false;
+                        } else {
+                            clearFieldError('insuranceDoc');
+                        }
+                    }
+                    break;
+                }
+
+                case 'notificationMethod': {
+                    const checkedNotifs = document.querySelectorAll('input[name="notificationMethod"]:checked');
+                    if (checkedNotifs.length === 0) {
+                        showFieldError('notificationMethod', 'Please check at least one notification option.');
+                        isValid = false;
+                    } else {
+                        clearFieldError('notificationMethod');
+                    }
+                    break;
+                }
+
+                default:
+                    break;
+            }
+
+            return isValid;
+        }
+
+        /* ==========================================================================
+           4. FORM SUBMISSION & RESET HANDLERS
+           ========================================================================== */
+
+        /**
+         * Handles form submission and triggers summary modal on valid input
+         */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            // Run validation for all required fields
+            const isNameValid = validateField('fullName');
+            const isEmailValid = validateField('email');
+            const isPhoneValid = validateField('phone');
+            const isDateValid = validateField('appointmentDate');
+            const isDeptValid = validateField('department');
+            const isSlotValid = validateField('timeSlot');
+            const isDocValid = validateField('insuranceDoc');
+            const isNotifValid = validateField('notificationMethod');
+
+            const isFormValid = isNameValid && isEmailValid && isPhoneValid && isDateValid && 
+                                isDeptValid && isSlotValid && isDocValid && isNotifValid;
+
+            if (isFormValid) {
+                // Collect Form Data
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const date = document.getElementById('appointmentDate').value;
+                const dept = document.getElementById('department').value;
+                const timeSlot = document.querySelector('input[name="timeSlot"]:checked').value;
+                const billing = document.querySelector('input[name="patientType"]:checked').value;
+                const notes = document.getElementById('notes').value.trim();
+
+                const notifArray = [];
+                document.querySelectorAll('input[name="notificationMethod"]:checked').forEach(cb => {
+                    notifArray.push(cb.value);
+                });
+
+                // Populate Modal Data
+                document.getElementById('summary-ref').textContent = 'CP-' + Math.floor(100000 + Math.random() * 900000);
+                document.getElementById('summary-name').textContent = fullName;
+                document.getElementById('summary-email').textContent = email;
+                document.getElementById('summary-phone').textContent = phone;
+                document.getElementById('summary-dept').textContent = dept;
+                document.getElementById('summary-datetime').textContent = `${date} (${timeSlot})`;
+                document.getElementById('summary-billing').textContent = billing;
+                document.getElementById('summary-notifs').textContent = notifArray.join(', ');
+
+                if (notes) {
+                    document.getElementById('summary-notes').textContent = notes;
+                    document.getElementById('summary-notes-row').classList.remove('hidden');
+                } else {
+                    document.getElementById('summary-notes-row').classList.add('hidden');
+                }
+
+                // Show Confirmation Modal
+                showModal();
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.text-rose-500:not(.hidden)');
+                if (firstError) {
+                    firstError.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+
+        /**
+         * Resets the booking form and error indicators
+         */
+        function resetForm() {
+            document.getElementById('appointment-form').reset();
+            
+            // Clear all inline errors
+            const errorEls = document.querySelectorAll('[id^="error-"]');
+            errorEls.forEach(el => {
+                el.textContent = '';
+                el.classList.add('hidden');
+            });
+
+            // Reset dynamic fields and styling
+            handlePatientTypeChange();
+            updateTimeSlotStyles();
+        }
+
+        /* ==========================================================================
+           5. MODAL UI LOGIC
+           ========================================================================== */
+
+        function showModal() {
+            const modal = document.getElementById('confirmation-modal');
+            const modalContent = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModalAndReset() {
+            const modal = document.getElementById('confirmation-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                resetForm();
+                switchTab('home');
+            }, 200);
+        }
+    </script>
+</body>
+</html>
